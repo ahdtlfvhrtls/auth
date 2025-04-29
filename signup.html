@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입</title>
+    <link rel="stylesheet" href="./signup.css" />
+  </head>
+  <body>
+    <h1>회원 가입</h1>
+    <p>
+      아이디:
+      <input type="text" id="userid" placeholder="아이디(4자 이상 20자 이하)" />
+    </p>
+    <p>
+      비밀 번호:<input
+        type="password"
+        id="password"
+        placeholder="비밀번호(4자 이상 20자 이하)"
+      />
+    </p>
+    <p>
+      이름:
+      <input type="text" id="name" placeholder="이름 입력해 주세요." />
+    </p>
+    <p>
+      이메일:
+      <input type="email" id="email" placeholder="이메일을 입력해 주세요." />
+    </p>
+    <button type="button" id="signupBtn">회원 가입</button>
+  </body>
+
+  <script>
+    document.getElementById("signupBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      const userid = document.getElementById("userid").value;
+      const password = document.getElementById("password").value;
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+
+      fetch("http://127.0.0.1:8080/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userid, password, name, email }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            return res.json().then((err) => {
+              throw new Error(err.message || "회원가입 실패");
+            });
+          }
+          return res.json();
+        })
+        .then((data) => {
+          alert(`회원가입 성공! 아이디: ${data.userid}`);
+        })
+        .catch((err) => {
+          alert(`에러 발생: ${err.message}`);
+        });
+    });
+  </script>
+</html>
